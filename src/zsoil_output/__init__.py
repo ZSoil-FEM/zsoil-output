@@ -16,6 +16,8 @@ from .C_NodalResults import NodalResults
 from .C_Contact_2D_Results import Contact_2D_Results
 from .C_Contact_3D_Results import Contact_3D_Results
 from .C_Heat_Exch_Results import Heat_Exch_Results
+from .C_ShellLayersResults import ShellLayers_Results
+from .C_SuperConvPatchRecovery import SuperConvPatchRecovery
 
 __all__ = [
     "Mesh",
@@ -36,4 +38,6 @@ __all__ = [
     "Contact_2D_Results",
     "Contact_3D_Results",
     "Heat_Exch_Results",
+    "ShellLayers_Results",
+    "SuperConvPatchRecovery",
 ]
