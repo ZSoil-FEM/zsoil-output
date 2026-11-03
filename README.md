@@ -26,7 +26,8 @@ pip install git+https://github.com/ZSoil-FEM/zsoil-output.git
 `Mesh`, `Element`, `HistoryOfExecution`, `RCF_info`, `RCF_layers_info`, `Diagram`,
 `Diagram3D`, `EleResults`, `EleLayersResults`, `Beam_EleResults`, `Beam_S_EleResults`,
 `Continuum_EleResults`, `Shell_EleResults`, `Truss_EleResults`, `NodalResults`,
-`Contact_2D_Results`, `Contact_3D_Results`, `Heat_Exch_Results`.
+`Contact_2D_Results`, `Contact_3D_Results`, `Heat_Exch_Results`, `ShellLayers_Results`,
+`SuperConvPatchRecovery`.
 
 `Element`'s `GROUP_*` constants (e.g. `Element.GROUP_BEAM`) are how you select which
 elements to read results for.

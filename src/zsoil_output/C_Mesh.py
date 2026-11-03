@@ -42,6 +42,7 @@ class Mesh():
         self.ZOOM_FILTER_ENOUGH_ONE_NODE_IS_IN = 1
         self.ZOOM_FILTER_ALL_NODES_MUST_BE_IN = 2
         self.debug = False
+        self.superconv_patch_recovery = {}
 
         ##        self.dict_elements_for_group = {'VOLUMICS' :[['Q4','Q4ES','T3'],['B8','B8ES','W6','TH4']],
         ##                                        'SHELLS'   :[[],['SXQ4','SHQ4','SXQ8','SXQ4']],
@@ -95,6 +96,19 @@ class Mesh():
         if analyze_rsl_files:
             self.set_seek_pos_in_rsl_files()
             self.set_seek_pos_in_lay_rsl_files()
+
+    def create_superconv_patch_recovery(self, ele_group_index, at_time,
+                                        **options):
+        """Create/own an SPR manager for continuum or shells at physical time.
+
+        The returned manager is also stored by group in
+        self.superconv_patch_recovery. Call manager.update(time) to reuse it.
+        """
+        from .C_SuperConvPatchRecovery import SuperConvPatchRecovery
+        recovery = SuperConvPatchRecovery(self, ele_group_index, at_time,
+                                          **options)
+        self.superconv_patch_recovery[ele_group_index] = recovery
+        return recovery
 
     # =========================
     def init_ndm(self, f_dat, dat_filename):
@@ -657,7 +671,7 @@ class Mesh():
         return None
 
     # =====================================================
-    def set_adj_elements_to_nodes(self, ele_groups=[]):
+    def set_adj_elements_to_nodes(self, ele_groups=[], mat_filter = []):
         # =====================================================
         for node in self.nodes:
             node.clear_adj_elements()
@@ -666,6 +680,10 @@ class Mesh():
             attach = True
             if len(ele_groups) > 0:
                 if element.get_group_index() not in ele_groups:
+                    attach = False
+            if attach and len(mat_filter) > 0:
+                material = self.materials [element.material_index-1]
+                if not material.index_in_inp in mat_filter:
                     attach = False
             if attach:
                 for node_index in element.nodes:

@@ -67,7 +67,7 @@ class Beam_EleResults (EleResults):
 
         for i,ele_index_1 in enumerate(ele_indices_1):
             ret = self._get_rsl_time_history (ele_index_1,solution_indices,rsl_key,comp)
-            out [i] = ret
+            out [i] = ret [0]
 
         return out
 
