@@ -1,9 +1,20 @@
-"""Linear, element-centre patch recovery (SPR_ex Fortran counterpart).
+"""Linear, element-centre patch recovery for ZSoil continuum and shell results.
 
-Indices in this API are SDK indices, starting at 1. Values supplied to recovery
-are ONE scalar/vector per element centre, in a common component frame. Gauss
-point averaging and shell tensor rotations belong to the caller.
+This module is part of ``zsoil-output``, a Python SDK developed for use
+with ZSoil FEM to read model data and output-result files.
+
+The :class:`SuperConvPatchRecovery` manager implements the linear patch
+recovery corresponding to the ZSoil ``SPR_ex`` workflow. Indices in this
+API are SDK indices starting at 1. Supplied values contain one scalar or
+vector per element centre in a common component frame; Gauss-point
+averaging and shell-tensor rotations remain the caller's responsibility.
+
+Only active, same-material elements enter a target element/local-node
+patch. Shell-normal compatibility and geometric rank tests control patch
+membership and enlargement. Singular fits retain the constant term while
+discarding weak coordinate terms.
 """
+
 from collections import defaultdict
 from collections.abc import Mapping
 
@@ -29,6 +40,27 @@ class SuperConvPatchRecovery:
     def __init__(self, mesh, ele_group_index, at_time, consider_existence=True,
                  mat_filter=None, inertia_tol=1.0e-2, rank_tol=1.0e-12,
                  shell_plane='patch', normal_cos_min=0.867):
+        """Initialize the super conv patch recovery object for the supplied project data.
+
+        :param mesh: Mesh containing the model nodes, elements, and materials.
+        :type mesh: Mesh
+        :param ele_group_index: Numeric element-group identifier.
+        :type ele_group_index: int
+        :param at_time: Physical time at which the model state is evaluated.
+        :type at_time: float
+        :param consider_existence: Consider existence used by this operation.
+        :type consider_existence: bool
+        :param mat_filter: Material indices to include; an empty sequence includes all materials.
+        :type mat_filter: Optional[Sequence[int]]
+        :param inertia_tol: Inertia tol used by this operation.
+        :type inertia_tol: float
+        :param rank_tol: Rank tol used by this operation.
+        :type rank_tol: float
+        :param shell_plane: Shell plane used by this operation.
+        :type shell_plane: str
+        :param normal_cos_min: Normal cos min used by this operation.
+        :type normal_cos_min: float
+        """
         if ele_group_index not in (Element.GROUP_CONTINUUM, Element.GROUP_SHELL):
             raise ValueError('SPR supports continuum and shell groups only')
         if not 0 <= inertia_tol < 1 or not 0 < rank_tol < 1:
@@ -48,7 +80,13 @@ class SuperConvPatchRecovery:
         self.update(at_time)
 
     def update(self, at_time):
-        """Rebuild after changing physical time, connectivity or coordinates."""
+        """Rebuild after changing physical time, connectivity or coordinates.
+
+        :param at_time: Physical time at which the model state is evaluated.
+        :type at_time: float
+        :return: This recovery manager after rebuilding its geometry and patches.
+        :rtype: SuperConvPatchRecovery
+        """
         if self.consider_existence and at_time is None:
             raise ValueError('Physical at_time is required for existence filtering')
         # Node.adj_elements contains topology, never a time-filtered snapshot.
@@ -94,6 +132,15 @@ class SuperConvPatchRecovery:
                 normals[index] = normal / length
 
         def compatible(target, candidate):
+            """Return whether a candidate element can belong to the current recovery patch.
+
+            :param target: Target used by this operation.
+            :type target: Element
+            :param candidate: Candidate used by this operation.
+            :type candidate: Element
+            :return: Whether a candidate element can belong to the current recovery patch.
+            :rtype: bool
+            """
             if target.material_index != candidate.material_index:
                 return False
             return (not normals or float(np.dot(normals[target.index], normals[candidate.index]))
@@ -138,6 +185,15 @@ class SuperConvPatchRecovery:
 
     @staticmethod
     def _faces(element, dimension):
+        """Return face-node groups used to connect neighboring elements.
+
+        :param element: Element used by this operation.
+        :type element: Element
+        :param dimension: Dimension used by this operation.
+        :type dimension: int
+        :return: The face-node groups used to connect neighboring elements.
+        :rtype: list[tuple[int, ...]]
+        """
         nodes = element.nodes
         if dimension == 2:
             if len(nodes) not in (3, 4):
@@ -157,13 +213,30 @@ class SuperConvPatchRecovery:
         return [tuple(nodes[j] for j in face) for face in topology]
 
     def get_patch(self, ele_index_1, local_node_index_1):
-        """Sorted element IDs for an element-local node (both indices 1-based)."""
+        """Sorted element IDs for an element-local node (both indices 1-based).
+
+        :param ele_index_1: 1-based element index.
+        :type ele_index_1: int
+        :param local_node_index_1: 1-based local node index.
+        :type local_node_index_1: int
+        :return: The sorted element IDs for an element-local node (both indices 1-based).
+        :rtype: tuple[int, ...]
+        """
         patches = self.ele_patches[ele_index_1]
         if not 1 <= local_node_index_1 <= len(patches):
             raise IndexError('Local node index must be in 1..nen')
         return tuple(patches[local_node_index_1 - 1])
 
     def _axes(self, element, selected):
+        """Return coordinate axes for fitting values over the recovery patch.
+
+        :param element: Element used by this operation.
+        :type element: Element
+        :param selected: Selected used by this operation.
+        :type selected: Sequence[int]
+        :return: The coordinate axes for fitting values over the recovery patch.
+        :rtype: numpy.ndarray
+        """
         if self.ele_group_index != Element.GROUP_SHELL:
             return np.eye(3)[:, :self.dimension]
         if self.shell_plane == 'patch':
@@ -193,7 +266,15 @@ class SuperConvPatchRecovery:
         return axes
 
     def _fit(self, offsets, values):
-        """Return value at origin and diagnostics; solve LS without normal equations."""
+        """Return value at origin and diagnostics; solve LS without normal equations.
+
+        :param offsets: Offsets used by this operation.
+        :type offsets: numpy.ndarray
+        :param values: Values used by this operation.
+        :type values: Union[Mapping, array_like]
+        :return: The value at origin and diagnostics; solve LS without normal equations.
+        :rtype: tuple[numpy.ndarray, dict]
+        """
         centred = offsets - offsets.mean(axis=0)
         inertia = np.sum(centred ** 2, axis=0)
         largest = float(inertia.max())
@@ -219,6 +300,13 @@ class SuperConvPatchRecovery:
 
     @staticmethod
     def _values(values):
+        """Validate and normalize the supplied element-center values.
+
+        :param values: Values used by this operation.
+        :type values: Union[Mapping, array_like]
+        :return: Element-indexed mapping of normalized NumPy value arrays.
+        :rtype: dict[int, numpy.ndarray]
+        """
         if not isinstance(values, Mapping):
             raise TypeError('values must map 1-based element IDs to centre scalar/vectors')
         result = {}
@@ -237,23 +325,45 @@ class SuperConvPatchRecovery:
             result[index] = array
         return result
 
-    def recover_element_nodes(self, ele_index_1, values, valid_elements=None,
-                              return_diagnostics=False):
+    def recover_element_nodes(self, ele_index_1, values, valid_elements=None, return_diagnostics=False):
         """Return (nen,ncomps) recovered values in element connectivity order.
 
-        valid_elements is an optional iterable of usable element IDs (the
-        Fortran ele_ok_in_patch counterpart). Missing values without an explicit
-        validity filter are errors, preventing accidental incomplete fits.
+                valid_elements is an optional iterable of usable element IDs (the
+                Fortran ele_ok_in_patch counterpart). Missing values without an explicit
+                validity filter are errors, preventing accidental incomplete fits.
+
+        :param ele_index_1: 1-based element index.
+        :type ele_index_1: int
+        :param values: Values used by this operation.
+        :type values: Union[Mapping, array_like]
+        :param valid_elements: Optional element indices allowed to contribute values.
+        :type valid_elements: Optional[Collection[int]]
+        :param return_diagnostics: Return diagnostics used by this operation.
+        :type return_diagnostics: bool
+        :return: The (nen,ncomps) recovered values in element connectivity order.
+        :rtype: Union[numpy.ndarray, tuple[numpy.ndarray, list[dict]]]
         """
         data = self._values(values)
         return self._recover_nodes(ele_index_1, data, valid_elements, return_diagnostics)
 
-    def recover_node(self, ele_index_1, local_node_index_1, values,
-                     valid_elements=None, return_diagnostics=False):
+    def recover_node(self, ele_index_1, local_node_index_1, values, valid_elements=None, return_diagnostics=False):
         """Recover just one element-local node; return a vector of length ncomps.
 
-        Both indices start at 1. Only values for this node's patch are needed.
-        For a scalar result, use returned_vector[0].
+                Both indices start at 1. Only values for this node's patch are needed.
+                For a scalar result, use returned_vector[0].
+
+        :param ele_index_1: 1-based element index.
+        :type ele_index_1: int
+        :param local_node_index_1: 1-based local node index.
+        :type local_node_index_1: int
+        :param values: Values used by this operation.
+        :type values: Union[Mapping, array_like]
+        :param valid_elements: Optional element indices allowed to contribute values.
+        :type valid_elements: Optional[Collection[int]]
+        :param return_diagnostics: Return diagnostics used by this operation.
+        :type return_diagnostics: bool
+        :return: The recover just one element-local node; return a vector of length ncomps.
+        :rtype: Union[numpy.ndarray, tuple[numpy.ndarray, dict]]
         """
         data = self._values(values)
         allowed = None if valid_elements is None else set(valid_elements)
@@ -262,6 +372,19 @@ class SuperConvPatchRecovery:
         return (recovered, info) if return_diagnostics else recovered
 
     def _recover_node_data(self, ele_index_1, local_node_index_1, data, allowed):
+        """Recover and return node data.
+
+        :param ele_index_1: 1-based element index.
+        :type ele_index_1: int
+        :param local_node_index_1: 1-based local node index.
+        :type local_node_index_1: int
+        :param data: Data used by this operation.
+        :type data: list
+        :param allowed: Allowed used by this operation.
+        :type allowed: Optional[Collection[int]]
+        :return: The node data.
+        :rtype: tuple[numpy.ndarray, dict]
+        """
         element = self.elements[ele_index_1]
         patch = self.get_patch(ele_index_1, local_node_index_1)
         selected = [i for i in patch if allowed is None or i in allowed]
@@ -280,6 +403,19 @@ class SuperConvPatchRecovery:
         return recovered, info
 
     def _recover_nodes(self, ele_index_1, data, valid_elements, diagnostics):
+        """Recover and return nodes.
+
+        :param ele_index_1: 1-based element index.
+        :type ele_index_1: int
+        :param data: Data used by this operation.
+        :type data: list
+        :param valid_elements: Optional element indices allowed to contribute values.
+        :type valid_elements: Optional[Collection[int]]
+        :param diagnostics: Diagnostics used by this operation.
+        :type diagnostics: bool
+        :return: The nodes.
+        :rtype: Union[numpy.ndarray, tuple[numpy.ndarray, list[dict]]]
+        """
         element = self.elements[ele_index_1]
         allowed = None if valid_elements is None else set(valid_elements)
         output, info = [], []
@@ -291,13 +427,33 @@ class SuperConvPatchRecovery:
         return (result, info) if diagnostics else result
 
     def recover(self, values, valid_elements=None):
-        """Map active element ID to (nen,ncomps) recovered values."""
+        """Map active element ID to (nen,ncomps) recovered values.
+
+        :param values: Values used by this operation.
+        :type values: Union[Mapping, array_like]
+        :param valid_elements: Optional element indices allowed to contribute values.
+        :type valid_elements: Optional[Collection[int]]
+        :return: Recovered nodal values keyed by active element index.
+        :rtype: dict[int, numpy.ndarray]
+        """
         data = self._values(values)
         allowed = None if valid_elements is None else set(valid_elements)
         return {i: self._recover_nodes(i, data, allowed, False) for i in self.elements}
 
     def set_values_at_pt(self, ele_index_1, xi, values, valid_elements=None):
-        """Shape-function interpolation of nodal recovered values at natural xi."""
+        """Shape-function interpolation of nodal recovered values at natural xi.
+
+        :param ele_index_1: 1-based element index.
+        :type ele_index_1: int
+        :param xi: Xi used by this operation.
+        :type xi: Sequence[float]
+        :param values: Values used by this operation.
+        :type values: Union[Mapping, array_like]
+        :param valid_elements: Optional element indices allowed to contribute values.
+        :type valid_elements: Optional[Collection[int]]
+        :return: Recovered value interpolated at the requested natural coordinates.
+        :rtype: numpy.ndarray
+        """
         element = self.elements[ele_index_1]
         nodal = self.recover_element_nodes(ele_index_1, values, valid_elements)
         if element.ref_ele is not None:
