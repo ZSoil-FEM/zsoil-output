@@ -19,6 +19,7 @@ from .C_EleResults import *
 from .C_Element_cnt_Q4 import *
 from .C_Element_cnt_T3 import *
 from .C_Element_cnt_bond_L2 import *
+from .C_Element_cnt_tip import *
 #from C_PlasticCodes       import *
 
 

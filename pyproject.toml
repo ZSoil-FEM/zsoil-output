@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "zsoil-output"
-version = "0.1.1"
+version = "0.1.2"
 authors = [
     { name="GeoDev Sarl", email="support@zsoil.com" }
 ]
@@ -14,9 +14,9 @@ requires-python = ">=3.8"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
+    "License :: OSI Approved :: MIT License",
 ]
-license = "MIT"
-license-files = ["LICEN[CS]E*"]
+license = { text = "MIT" }
 dependencies = [
     "numpy",
     "matplotlib",
