@@ -749,6 +749,7 @@ def plot_figures(y_tab, N, Q, M, out_png, ti=[]):
     """
     import pylab
 
+    import pylab
     colors = ['b', 'r', 'c', 'm', 'k']
     fig, (axes_N, axes_Q, axes_M) = pylab.subplots(1, 3, sharey=True, figsize=(16, 8))
     fig.subplots_adjust(hspace=0.0, wspace=0.1, top=0.95, right=0.95)
