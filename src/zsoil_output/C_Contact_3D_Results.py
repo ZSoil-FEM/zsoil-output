@@ -5,12 +5,10 @@ from .C_EleResults         import *
 from .C_Element_cnt_Q4   import *
 from .C_Element_cnt_T3   import *
 from .C_Element_cnt_bond_L2 import *
+from .C_Element_cnt_tip import *
 #from C_PlasticCodes       import *
 
 #debug this class
-from .C_Mesh import *
-from .C_Rcf_info import *
-from .C_HistoryOfExecution import *
 
 #class to get results from contact interface elements
 #=====================================================
@@ -211,6 +209,9 @@ class Contact_3D_Results (EleResults):
 #=====================================================
 def main():
 #=====================================================
+    from .C_HistoryOfExecution import HistoryOfExecution
+    from .C_Mesh import Mesh
+    from .C_Rcf_info import RCF_info
     pass
     #project = "d:/vxx_zsoil/TEMPLATES/tests/TEST-MNT-RECOVER-SHELLS"
     # project = "d:/vxx_zsoil/manual/Templates/ZSsoldierWalls/tutorials/TUT-SOLDIERWALL-2"  # TEST-MNT-RECOVER-CONT-2"

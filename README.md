@@ -55,17 +55,62 @@ his, mesh, rcf = HistoryOfExecution(res_path), Mesh(res_path), RCF_info(res_path
 beam_rsl = Beam_EleResults(mesh, his, rcf)
 ```
 
-### Using a local clone instead of the pip-installed package
+## Contributing
 
-To use a local clone (e.g. while developing the SDK itself) instead of, or
-alongside, the pip-installed package, add the clone's `src` folder to `sys.path`
-before importing — no install needed:
+Contributions go through a fork and a pull request — no write access to this
+repository is needed.
 
-```python
-import sys
-sys.path.insert(0, r"C:\path\to\MyLocalPackageClone\src")   # the folder that CONTAINS zsoil_output\
-import zsoil_output
+1. **Fork** — on [github.com/ZSoil-FEM/zsoil-output](https://github.com/ZSoil-FEM/zsoil-output),
+   click **Fork** (top right). This creates `github.com/<your-user>/zsoil-output`.
+
+2. **Clone your fork** and register this repository as `upstream`:
+   ```bash
+   git clone https://github.com/<your-user>/zsoil-output.git
+   cd zsoil-output
+   git remote add upstream https://github.com/ZSoil-FEM/zsoil-output.git
+   ```
+
+3. **Install in editable mode** — Python then imports `zsoil_output` straight from
+   your clone's `src` folder, so your edits take effect without reinstalling:
+   ```bash
+   pip uninstall zsoil-output     # only if a regular install is already present
+   pip install -e .
+   ```
+   Check that the clone is the one being used:
+   ```bash
+   python -c "import zsoil_output; print(zsoil_output.__file__)"
+   ```
+   The printed path should point into your clone's `src\zsoil_output` folder.
+   Use the same Python / conda environment you run your ZSoil scripts with.
+
+4. **Create a branch** for each change, starting from the latest upstream `main`:
+   ```bash
+   git fetch upstream
+   git checkout -b my-fix upstream/main
+   ```
+
+5. **Make your changes, test, commit and push** to your fork:
+   ```bash
+   git add -A
+   git commit -m "Short description of the change"
+   git push -u origin my-fix
+   ```
+
+6. **Open a pull request** — GitHub shows a *Compare & pull request* button on
+   your fork after the push. Target `ZSoil-FEM/zsoil-output`, branch `main`, and
+   describe what changed and how you tested it.
+
+To keep your fork up to date later:
+```bash
+git fetch upstream
+git checkout main
+git merge upstream/main
+git push origin main
 ```
+
+Please use `git` (not the GitHub web *Upload files* button) to submit changes:
+uploads replace whole files, including their line endings, which makes the
+pull request very hard to review.
 
 See [zsoil-output-examples](https://github.com/ZSoil-FEM/zsoil-output-examples)
 for worked examples reading real ZSoil projects with this SDK.

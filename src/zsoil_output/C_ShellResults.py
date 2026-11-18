@@ -8,10 +8,6 @@ from .C_Element_shell_SHQ4 import *
 #from C_PlasticCodes       import *
 
 #debug this class
-from .C_Mesh import *
-from .C_Rcf_info import *
-from .C_HistoryOfExecution import *
-from .C_ContinuumResults import *
 
 
 #class to get results for shell elements
@@ -686,6 +682,10 @@ class Shell_EleResults (EleResults):
 def main():
 #=====================================================
     #project = "d:/vxx_zsoil/TEMPLATES/tests/TEST-MNT-RECOVER-SHELLS"
+    from .C_ContinuumResults import plot_figures
+    from .C_HistoryOfExecution import HistoryOfExecution
+    from .C_Mesh import Mesh
+    from .C_Rcf_info import RCF_info
     project = "d:/vxx_zsoil/TEMPLATES/tests/test-solw-profile-plus-pile-case-1"  # TEST-MNT-RECOVER-CONT-2"
     mesh = Mesh (project)
     rcf  = RCF_info (project)

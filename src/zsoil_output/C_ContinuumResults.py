@@ -12,13 +12,8 @@ from .C_NodalResults       import *
 #from C_PlasticCodes       import *
 
 #debug this class
-from .C_Mesh import *
-from .C_Rcf_info import *
-from .C_HistoryOfExecution import *
 from .C_math_utl import *
 #debug
-from .C_ShellResults import *
-import pylab
 
 #class to get results for continuum 2D/3D elements
 
@@ -599,6 +594,7 @@ def combine_stress_resultants (x_tab1, x_size1, Forces1,\
 #debug function to verify results
 def plot_figures (y_tab,N,Q,M,out_png,ti=[]):
 
+    import pylab
     colors = ['b', 'r', 'c', 'm', 'k']
     fig, (axes_N,axes_Q,axes_M) = pylab.subplots (1, 3, sharey=True,figsize=(16,8))
     fig.subplots_adjust(hspace=0.0,wspace=0.1,top=0.95, right=0.95)
@@ -649,6 +645,10 @@ def plot_figures (y_tab,N,Q,M,out_png,ti=[]):
 #=====================================================
 def main():
 #=====================================================
+    from .C_HistoryOfExecution import HistoryOfExecution
+    from .C_Mesh import Mesh
+    from .C_Rcf_info import RCF_info
+    from .C_ShellResults import Shell_EleResults
     project = "d:/vxx_zsoil/TEMPLATES/tests/rc_pile_coarse" #TEST-MNT-RECOVER-CONT-2"
     mesh = Mesh (project)
     rcf  = RCF_info (project)

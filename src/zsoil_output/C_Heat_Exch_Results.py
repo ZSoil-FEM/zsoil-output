@@ -4,9 +4,6 @@ import numpy as np
 from .C_EleResults         import *
 from .C_Element_heat_exch_L2   import *
 #debug this class
-from .C_Mesh import *
-from .C_Rcf_info import *
-from .C_HistoryOfExecution import *
 
 #class to get results from contact interface elements
 #=====================================================
