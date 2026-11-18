@@ -6,7 +6,7 @@ candidate elements for every query. No result files or mesh adjacency lists are 
 """
 from dataclasses import dataclass
 import numpy as np
-from C_LocalCoordinates import ReferenceGeometry, evaluate_local_coordinates, INSIDE
+from .C_LocalCoordinates import ReferenceGeometry, evaluate_local_coordinates, INSIDE
 
 
 @dataclass
@@ -133,7 +133,7 @@ class LineMeshIntersector:
 
     def rebuild(self, rebuild_mesh_grid=True):
         """Refresh selection; optionally rebuild the shared geometry grid."""
-        from C_MeshSpatialGrid import get_mesh_grid, MeshSpatialGrid
+        from .C_MeshSpatialGrid import get_mesh_grid, MeshSpatialGrid
         self.dimension = self.mesh_ref.ndm
         if rebuild_mesh_grid:
             old = get_mesh_grid(self.mesh_ref)
@@ -158,7 +158,7 @@ class LineMeshIntersector:
             self._allowed = indices
 
     def _candidate_records(self, a, b, at_time):
-        from C_MeshSpatialGrid import get_mesh_grid, element_is_active
+        from .C_MeshSpatialGrid import get_mesh_grid, element_is_active
         grid = get_mesh_grid(self.mesh_ref)
         padding = max(self.tol_distance, 64*np.finfo(float).eps)*grid.max_element_size
         for record in grid.query_segment(a, b, padding):
@@ -194,7 +194,7 @@ class LineMeshIntersector:
         breaking ties by SDK element index; clipped tails are retained. Set
         remove_overlaps=False to keep a separate segment for each owner.
         """
-        from C_MeshSpatialGrid import validate_time
+        from .C_MeshSpatialGrid import validate_time
         validate_time(at_time)
         a, b = self._point(a), self._point(b)
         direction = b-a

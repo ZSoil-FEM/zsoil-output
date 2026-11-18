@@ -5,7 +5,7 @@ SHQ4 uses all eight nodes as a volumic B8, rather than a surface.
 """
 from dataclasses import dataclass
 import numpy as np
-from C_LocalCoordinates import (ReferenceGeometry, evaluate_local_coordinates,
+from .C_LocalCoordinates import (ReferenceGeometry, evaluate_local_coordinates,
                                 INSIDE, OUTSIDE_ROUGH_CHECK, OUTSIDE_DISTANCE,
                                 PROCEDURE_FAILURE)
 
@@ -121,7 +121,7 @@ def locate_point(mesh, point, at_time, elements=None, signed_distance=False,
     surface with an in-domain projection, even if its distance makes it outside.
     No match returns element/xsi/distance=None. Boundaries tie by SDK index.
     """
-    from C_MeshSpatialGrid import get_mesh_grid, element_is_active, validate_time
+    from .C_MeshSpatialGrid import get_mesh_grid, element_is_active, validate_time
     p = _point(mesh, point)
     validate_time(at_time)
     if (not np.isfinite(tol_xsi) or tol_xsi < 0 or not np.isfinite(tol_distance)

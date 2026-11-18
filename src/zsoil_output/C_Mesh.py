@@ -1,30 +1,30 @@
-from C_Element import *
-from C_Node import *
-from C_Ltf import *
-from C_Exf import *
-from C_Material import *
+from .C_Element import *
+from .C_Node import *
+from .C_Ltf import *
+from .C_Exf import *
+from .C_Material import *
 
-from C_Element_beam_L2 import *
-from C_Element_s_beam_L2 import *
-from C_Element_cont_Q4 import *
-from C_Element_cont_T3 import *
-from C_Element_cont_B8 import *
-from C_Element_cont_TH4 import *
-from C_Element_cont_W6 import *
-from C_Element_shell_Q4 import *
-from C_Element_shell_SHQ4 import *
-from C_Element_memb_L2 import *
-from C_Element_memb_T3 import *
-from C_Element_memb_Q4 import *
-from C_Element_truss_L2 import *
-from C_Element_cnt_L2 import *
-from C_Element_cnt_Q4 import *
-from C_Element_cnt_T3 import *
-from C_Element_cnt_bond_L2 import *
-from C_Element_cnt_tip import *
-from C_Element_heat_exch_L2 import *
-from C_Rcf_info import *
-from C_Rcf_layers_info import *
+from .C_Element_beam_L2 import *
+from .C_Element_s_beam_L2 import *
+from .C_Element_cont_Q4 import *
+from .C_Element_cont_T3 import *
+from .C_Element_cont_B8 import *
+from .C_Element_cont_TH4 import *
+from .C_Element_cont_W6 import *
+from .C_Element_shell_Q4 import *
+from .C_Element_shell_SHQ4 import *
+from .C_Element_memb_L2 import *
+from .C_Element_memb_T3 import *
+from .C_Element_memb_Q4 import *
+from .C_Element_truss_L2 import *
+from .C_Element_cnt_L2 import *
+from .C_Element_cnt_Q4 import *
+from .C_Element_cnt_T3 import *
+from .C_Element_cnt_bond_L2 import *
+from .C_Element_cnt_tip import *
+from .C_Element_heat_exch_L2 import *
+from .C_Rcf_info import *
+from .C_Rcf_layers_info import *
 from math import *
 
 
@@ -47,11 +47,11 @@ class Mesh():
         ##        self.dict_elements_for_group = {'VOLUMICS' :[['Q4','Q4ES','T3'],['B8','B8ES','W6','TH4']],
         ##                                        'SHELLS'   :[[],['SXQ4','SHQ4','SXQ8','SXQ4']],
         ##                                        'CONTACT'  :[['C_L2','CB_L2'],['C_Q4','C_T3']],
-        ##                                        'MEMBRANES':[['M_L2'],['M_T3','M_Q4']],
+        ##                                        'MEMBRANE': [['M_L2'],['M_T3','M_Q4']],
         ##                                        'BEAMS'    :[['BEL2','SBEL2'],['BEL2','SBEL2']],
         ##                                        'TRUSSES'  :[['TRS2'],['TRS2']]
         ##                                        }
-        self.groups_with_rsl = ['VOLUMICS', 'SHELLS', 'TRUSSES', 'BEAMS', 'CONTACT','HEAT_EXCH']
+        self.groups_with_rsl = ['VOLUMICS', 'SHELLS', 'TRUSSES', 'BEAMS', 'CONTACT', 'MEMBRANE', 'HEAT_EXCH']
         f = open(project + ".dat", "rt")
 
         self.init_ndm(f, "")
@@ -106,7 +106,7 @@ class Mesh():
         Changing query time does not require rebuilding. Existing line
         intersectors automatically use the new shared grid on their next query.
         """
-        from C_MeshSpatialGrid import MeshSpatialGrid
+        from .C_MeshSpatialGrid import MeshSpatialGrid
         self.spatial_grid = MeshSpatialGrid(self, max_cells_per_axis)
         self.bound_box = self.spatial_grid.bound_box
         return self.spatial_grid
@@ -121,7 +121,7 @@ class Mesh():
         to the largest element extent. Off-surface projections remain available
         with inside=False. See tutorials/point_location.md for selection rules.
         """
-        from C_PointLocation import locate_point
+        from .C_PointLocation import locate_point
         return locate_point(self, point, at_time, elements=elements,
                             signed_distance=signed_distance, tol_xsi=tol_xsi,
                             tol_distance=tol_distance, max_iterations=max_iterations)
@@ -129,7 +129,7 @@ class Mesh():
     def evaluate_point(self, point, element, signed_distance=False,
                        tol_xsi=1.e-6, tol_distance=1.e-10, max_iterations=30):
         """Evaluate in one element (SDK object or 1-based SDK element index)."""
-        from C_PointLocation import evaluate_point
+        from .C_PointLocation import evaluate_point
         return evaluate_point(self, point, element, signed_distance=signed_distance,
                               tol_xsi=tol_xsi, tol_distance=tol_distance,
                               max_iterations=max_iterations)
@@ -140,7 +140,7 @@ class Mesh():
         Pass a filtered element list to restrict materials or physical time.
         Call intersector.rebuild() after changing mesh coordinates/connectivity.
         """
-        from C_LineMeshIntersection import LineMeshIntersector
+        from .C_LineMeshIntersection import LineMeshIntersector
         return LineMeshIntersector(self, elements=elements, **options)
 
     def create_superconv_patch_recovery(self, ele_group_index, at_time,
@@ -150,7 +150,7 @@ class Mesh():
         The returned manager is also stored by group in
         self.superconv_patch_recovery. Call manager.update(time) to reuse it.
         """
-        from C_SuperConvPatchRecovery import SuperConvPatchRecovery
+        from .C_SuperConvPatchRecovery import SuperConvPatchRecovery
         recovery = SuperConvPatchRecovery(self, ele_group_index, at_time,
                                           **options)
         self.superconv_patch_recovery[ele_group_index] = recovery
@@ -234,6 +234,8 @@ class Mesh():
                 e = Element_cnt_T3(self)
             elif label == "CB_L2":
                 e = Element_cnt_bond_L2(self)
+            elif label == "CNNPL":
+                e = Element_cnt_tip(self)
             elif label == "HEXL2":
                 e = Element_heat_exch_L2(self)
             elif label == "BHPPE":
