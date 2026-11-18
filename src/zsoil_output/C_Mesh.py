@@ -37,17 +37,17 @@ class Mesh():
         # =====================================================
 
         self.my_project = project
+        self.superconv_patch_recovery = {}
         self.dict_ndm = {'PLANESTRAIN': 2, '3D': 3, 'AXISYMETRY': 2}
         self.ZOOM_FILTER_OFF = 0
         self.ZOOM_FILTER_ENOUGH_ONE_NODE_IS_IN = 1
         self.ZOOM_FILTER_ALL_NODES_MUST_BE_IN = 2
         self.debug = False
-        self.superconv_patch_recovery = {}
 
         ##        self.dict_elements_for_group = {'VOLUMICS' :[['Q4','Q4ES','T3'],['B8','B8ES','W6','TH4']],
         ##                                        'SHELLS'   :[[],['SXQ4','SHQ4','SXQ8','SXQ4']],
         ##                                        'CONTACT'  :[['C_L2','CB_L2'],['C_Q4','C_T3']],
-        ##                                        'MEMBRANE' :[['M_L2'],['M_T3','M_Q4']],
+        ##                                        'MEMBRANE': [['M_L2'],['M_T3','M_Q4']],
         ##                                        'BEAMS'    :[['BEL2','SBEL2'],['BEL2','SBEL2']],
         ##                                        'TRUSSES'  :[['TRS2'],['TRS2']]
         ##                                        }
@@ -93,9 +93,55 @@ class Mesh():
 
         f.close()
 
+        self.rebuild_spatial_grid()
+
         if analyze_rsl_files:
             self.set_seek_pos_in_rsl_files()
             self.set_seek_pos_in_lay_rsl_files()
+
+    def rebuild_spatial_grid(self, max_cells_per_axis=50):
+        """Rebuild the shared bounding box/grid after geometry/topology changes.
+
+        All elements are indexed, independently of their existence functions.
+        Changing query time does not require rebuilding. Existing line
+        intersectors automatically use the new shared grid on their next query.
+        """
+        from .C_MeshSpatialGrid import MeshSpatialGrid
+        self.spatial_grid = MeshSpatialGrid(self, max_cells_per_axis)
+        self.bound_box = self.spatial_grid.bound_box
+        return self.spatial_grid
+
+    def locate_point(self, point, at_time, elements=None, signed_distance=False,
+                     tol_xsi=1.e-6, tol_distance=1.e-10, max_iterations=30):
+        """Find a point in continuum/3D surface elements; return PointLocation.
+
+        Result: inside, element, xsi (xi/eta[/zeta]), distance, projected_point,
+        normal and status. Surface distance can be signed along its local normal.
+        SHQ4 is volumic (8 nodes, 3 local coordinates). tol_distance is relative
+        to the largest element extent. Off-surface projections remain available
+        with inside=False. See tutorials/point_location.md for selection rules.
+        """
+        from .C_PointLocation import locate_point
+        return locate_point(self, point, at_time, elements=elements,
+                            signed_distance=signed_distance, tol_xsi=tol_xsi,
+                            tol_distance=tol_distance, max_iterations=max_iterations)
+
+    def evaluate_point(self, point, element, signed_distance=False,
+                       tol_xsi=1.e-6, tol_distance=1.e-10, max_iterations=30):
+        """Evaluate in one element (SDK object or 1-based SDK element index)."""
+        from .C_PointLocation import evaluate_point
+        return evaluate_point(self, point, element, signed_distance=signed_distance,
+                              tol_xsi=tol_xsi, tol_distance=tol_distance,
+                              max_iterations=max_iterations)
+
+    def create_line_intersector(self, elements=None, **options):
+        """Build a reusable continuum mesh / finite line segment intersector.
+
+        Pass a filtered element list to restrict materials or physical time.
+        Call intersector.rebuild() after changing mesh coordinates/connectivity.
+        """
+        from .C_LineMeshIntersection import LineMeshIntersector
+        return LineMeshIntersector(self, elements=elements, **options)
 
     def create_superconv_patch_recovery(self, ele_group_index, at_time,
                                         **options):
@@ -680,11 +726,11 @@ class Mesh():
             attach = True
             if len(ele_groups) > 0:
                 if element.get_group_index() not in ele_groups:
-                    attach = False
+                    attach = False            
             if attach and len(mat_filter) > 0:
                 material = self.materials [element.material_index-1]
                 if not material.index_in_inp in mat_filter:
-                    attach = False
+                    attach = False                
             if attach:
                 for node_index in element.nodes:
                     if node_index != 0:
