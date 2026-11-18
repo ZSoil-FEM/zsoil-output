@@ -1,6 +1,6 @@
-from .C_Element_Surf_generic import *
-from .C_Element_Volumic_generic import *
-from .C_Element_T3_generic import *
+from C_Element_T3_generic import Element_T3_generic
+from C_Element_Surf_generic import *
+from C_Element_Volumic_generic import *
 import numpy as np
 
 #=====================================================
