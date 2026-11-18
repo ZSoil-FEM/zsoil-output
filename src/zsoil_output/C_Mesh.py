@@ -1,3 +1,13 @@
+"""Read, store, filter, and query a ZSoil finite-element mesh.
+
+This module is part of ``zsoil-output``, a Python SDK developed for use with ZSoil FEM to
+read model data and output-result files.
+
+The :class:`Mesh` reader constructs nodes, elements, materials, existence functions, and
+result metadata. It also provides group, activity, material, class, spatial, adjacency, and
+ordering queries.
+"""
+
 from .C_Element import *
 from .C_Node import *
 from .C_Ltf import *
@@ -28,14 +38,15 @@ from .C_Rcf_layers_info import *
 from math import *
 
 
-# =====================================================
 class Mesh():
-    # =====================================================
-
-    # ====================================================
     def __init__(self, project, analyze_rsl_files=True):
-        # =====================================================
+        """Initialize the mesh object for the supplied project data.
 
+        :param project: Path or filename prefix of the ZSoil project.
+        :type project: str
+        :param analyze_rsl_files: Analyze result files used by this operation.
+        :type analyze_rsl_files: bool
+        """
         self.my_project = project
         self.dict_ndm = {'PLANESTRAIN': 2, '3D': 3, 'AXISYMETRY': 2}
         self.ZOOM_FILTER_OFF = 0
@@ -44,13 +55,13 @@ class Mesh():
         self.debug = False
         self.superconv_patch_recovery = {}
 
-        ##        self.dict_elements_for_group = {'VOLUMICS' :[['Q4','Q4ES','T3'],['B8','B8ES','W6','TH4']],
-        ##                                        'SHELLS'   :[[],['SXQ4','SHQ4','SXQ8','SXQ4']],
-        ##                                        'CONTACT'  :[['C_L2','CB_L2'],['C_Q4','C_T3']],
-        ##                                        'MEMBRANE' :[['M_L2'],['M_T3','M_Q4']],
-        ##                                        'BEAMS'    :[['BEL2','SBEL2'],['BEL2','SBEL2']],
-        ##                                        'TRUSSES'  :[['TRS2'],['TRS2']]
-        ##                                        }
+        # self.dict_elements_for_group = {'VOLUMICS' :[['Q4','Q4ES','T3'],['B8','B8ES','W6','TH4']],
+        # 'SHELLS'   :[[],['SXQ4','SHQ4','SXQ8','SXQ4']],
+        # 'CONTACT'  :[['C_L2','CB_L2'],['C_Q4','C_T3']],
+        # 'MEMBRANE' :[['M_L2'],['M_T3','M_Q4']],
+        # 'BEAMS'    :[['BEL2','SBEL2'],['BEL2','SBEL2']],
+        # 'TRUSSES'  :[['TRS2'],['TRS2']]
+        # }
         self.groups_with_rsl = ['VOLUMICS', 'SHELLS', 'TRUSSES', 'BEAMS', 'CONTACT', 'MEMBRANE', 'HEAT_EXCH']
         f = open(project + ".dat", "rt")
 
@@ -97,12 +108,20 @@ class Mesh():
             self.set_seek_pos_in_rsl_files()
             self.set_seek_pos_in_lay_rsl_files()
 
-    def create_superconv_patch_recovery(self, ele_group_index, at_time,
-                                        **options):
+    def create_superconv_patch_recovery(self, ele_group_index, at_time, **options):
         """Create/own an SPR manager for continuum or shells at physical time.
 
-        The returned manager is also stored by group in
-        self.superconv_patch_recovery. Call manager.update(time) to reuse it.
+                The returned manager is also stored by group in
+                self.superconv_patch_recovery. Call manager.update(time) to reuse it.
+
+        :param ele_group_index: Numeric element-group identifier.
+        :type ele_group_index: int
+        :param at_time: Physical time at which the model state is evaluated.
+        :type at_time: float
+        :param **options: Additional keyword options passed to the underlying operation.
+        :type **options: dict
+        :return: Configured superconvergent patch-recovery manager.
+        :rtype: SuperConvPatchRecovery
         """
         from .C_SuperConvPatchRecovery import SuperConvPatchRecovery
         recovery = SuperConvPatchRecovery(self, ele_group_index, at_time,
@@ -110,9 +129,14 @@ class Mesh():
         self.superconv_patch_recovery[ele_group_index] = recovery
         return recovery
 
-    # =========================
     def init_ndm(self, f_dat, dat_filename):
-        # =========================
+        """Read and store the model's spatial dimension from the ZSoil input file.
+
+        :param f_dat: Open ZSoil input stream, or None to open the supplied filename.
+        :type f_dat: Optional[IO]
+        :param dat_filename: Dat filename used by this operation.
+        :type dat_filename: str
+        """
         f = f_dat
         if f == None:
             f = open(dat_filename, "rt")
@@ -128,9 +152,16 @@ class Mesh():
 
         self.ndm = self.dict_ndm[job]
 
-    # =========================
     def init_elements(self, f_dat, dat_filename):
-        # =========================
+        """Read the model elements from the ZSoil input file.
+
+        :param f_dat: Open ZSoil input stream, or None to open the supplied filename.
+        :type f_dat: Optional[IO]
+        :param dat_filename: Dat filename used by this operation.
+        :type dat_filename: str
+        :return: The model elements from the ZSoil input file.
+        :rtype: list
+        """
         f = f_dat
         if f == None:
             f = open(dat_filename, "rt")
@@ -213,9 +244,16 @@ class Mesh():
 
         return elements
 
-    # =========================
     def init_nodes(self, f_dat, dat_filename):
-        # =========================
+        """Read the model nodes from the ZSoil input file.
+
+        :param f_dat: Open ZSoil input stream, or None to open the supplied filename.
+        :type f_dat: Optional[IO]
+        :param dat_filename: Dat filename used by this operation.
+        :type dat_filename: str
+        :return: The model nodes from the ZSoil input file.
+        :rtype: list
+        """
         f = f_dat
         if f == None:
             f = open(dat_filename, "rt")
@@ -242,9 +280,16 @@ class Mesh():
 
         return nodes
 
-    # =========================
     def init_ltfs(self, f_dat, dat_filename):
-        # =========================
+        """Read the load-time functions from the ZSoil input file.
+
+        :param f_dat: Open ZSoil input stream, or None to open the supplied filename.
+        :type f_dat: Optional[IO]
+        :param dat_filename: Dat filename used by this operation.
+        :type dat_filename: str
+        :return: The load-time functions from the ZSoil input file.
+        :rtype: list
+        """
         f = f_dat
         if f == None:
             f = open(dat_filename, "rt")
@@ -271,9 +316,16 @@ class Mesh():
 
         return ltfs
 
-    # =========================
     def init_exfs(self, f_dat, dat_filename):
-        # =========================
+        """Read the existence functions from the ZSoil input file.
+
+        :param f_dat: Open ZSoil input stream, or None to open the supplied filename.
+        :type f_dat: Optional[IO]
+        :param dat_filename: Dat filename used by this operation.
+        :type dat_filename: str
+        :return: The existence functions from the ZSoil input file.
+        :rtype: list
+        """
         f = f_dat
         if f == None:
             f = open(dat_filename, "rt")
@@ -300,9 +352,16 @@ class Mesh():
 
         return exfs
 
-    # =========================
     def init_materials(self, f_dat, dat_filename):
-        # =========================
+        """Read the model materials from the ZSoil input file.
+
+        :param f_dat: Open ZSoil input stream, or None to open the supplied filename.
+        :type f_dat: Optional[IO]
+        :param dat_filename: Dat filename used by this operation.
+        :type dat_filename: str
+        :return: The model materials from the ZSoil input file.
+        :rtype: list
+        """
         f = f_dat
         if f == None:
             f = open(dat_filename, "rt")
@@ -329,9 +388,8 @@ class Mesh():
 
         return materials
 
-    # =========================
     def set_seek_pos_in_rsl_files(self):
-        # =========================
+        """Set seek pos in results files for subsequent calculations."""
         rcf = RCF_info(self.my_project)
         for group in self.groups_with_rsl:
             last_pos = 0
@@ -341,9 +399,8 @@ class Mesh():
                 e.seek_in_rsl = last_pos
                 last_pos = last_pos + len(e.xsiGP) * gp_size * 4  # in bytes
 
-    # =========================
     def set_seek_pos_in_lay_rsl_files(self):
-        # =========================
+        """Set seek pos in layer results files for subsequent calculations."""
         rcf_lay = RCF_layers_info(self.my_project)
         for group in self.groups_with_rsl:
             last_pos = 0
@@ -356,9 +413,16 @@ class Mesh():
                 ngaus = len(e.xsiGP)
                 last_pos = last_pos + ngaus * nlayers_all * lay_size * 4  # in bytes
 
-    # =========================
     def give_cell_with_string(self, cells, string):
-        # =========================
+        """Return the first cell matching the supplied text.
+
+        :param cells: Cells used by this operation.
+        :type cells: Sequence
+        :param string: String used by this operation.
+        :type string: str
+        :return: The first cell matching the supplied text.
+        :rtype: int
+        """
         for i in range(len(cells)):
             a = cells[i]
             a = a.Trim()
@@ -366,10 +430,14 @@ class Mesh():
                 return i
         return -1
 
-    # =========================
     def give_Node_at_XYZ(self, X):
-        # =========================
-        # this function returs node index (starting from 1)
+        """Return node at global coordinates.
+
+        :param X: X used by this operation.
+        :type X: Union[float, array_like]
+        :return: 1-based index of the node nearest to the supplied coordinates.
+        :rtype: int
+        """
         dist_min = 1.0e38
         node_min = -1
 
@@ -383,10 +451,25 @@ class Mesh():
                 node_min = i + 1
         return node_min
 
-    # =====================================================
     def get_list_of_elements(self, group_filter_in, time=0.0, only_active=False, mat_filter=[], ele_class_filter=[],
                              zoom_filter=[0, [[], [], []]]):
-        # =====================================================
+        """Return elements matching the requested group, activity, material, class, and spatial filters.
+
+        :param group_filter_in: Group filter in used by this operation.
+        :type group_filter_in: str or int
+        :param time: Physical time at which the value or state is requested.
+        :type time: float
+        :param only_active: Whether to exclude elements that are inactive at the requested time.
+        :type only_active: bool
+        :param mat_filter: Material indices to include; an empty sequence includes all materials.
+        :type mat_filter: Sequence[int]
+        :param ele_class_filter: Element class filter used by this operation.
+        :type ele_class_filter: Sequence[type]
+        :param zoom_filter: Spatial filtering settings; the default disables filtering.
+        :type zoom_filter: Sequence
+        :return: The elements matching the requested group, activity, material, class, and spatial filters.
+        :rtype: list
+        """
         if type(group_filter_in) == type(""):
             group_filter = group_filter_in
         elif type(group_filter_in) == type(1):
@@ -464,30 +547,50 @@ class Mesh():
 
         return aux_elements
 
-    # =====================================================
     def get_group_of_elements(self, group_string):
-        # =====================================================
+        """Return all elements belonging to the requested group.
+
+        :param group_string: Group string used by this operation.
+        :type group_string: str
+        :return: All elements belonging to the requested group.
+        :rtype: list
+        """
         aux = self.get_list_of_elements(group_string)
         return aux
 
-    # =====================================================
     def get_group_of_elements_ex(self, group_index):
-        # =====================================================
+        """Return all elements belonging to the group identified by its numeric index.
+
+        :param group_index: Group index used by this operation.
+        :type group_index: int
+        :return: All elements belonging to the group identified by its numeric index.
+        :rtype: list
+        """
         aux = self.get_list_of_elements(Element.group_dict[group_index])
         return aux
 
-    # =====================================================
     def get_sum_of_gauss_points(self, group):
-        # =====================================================
+        """Return the total number of integration points in an element group.
+
+        :param group: Group used by this operation.
+        :type group: str or int
+        :return: The total number of integration points in an element group.
+        :rtype: int
+        """
         count = 0
         for e in self.elements:
             if e.group == group:
                 count = count + len(e.xsiGP)
         return count
 
-    # =====================================================
     def get_sum_of_layers(self, group):
-        # =====================================================
+        """Return the total number of layers in an element group.
+
+        :param group: Group used by this operation.
+        :type group: str or int
+        :return: The total number of layers in an element group.
+        :rtype: int
+        """
         count = 0
         for e in self.elements:
             if e.group == group:
@@ -495,9 +598,16 @@ class Mesh():
                 count = count + len(e.xsiGP) * nlayers_all
         return count
 
-    # =====================================================
     def get_list_of_nodes(self, ele_filter=[], zoom_filter=[0, [[], [], []]]):
-        # =====================================================
+        """Return nodes matching the requested element and spatial filters.
+
+        :param ele_filter: Element filter used by this operation.
+        :type ele_filter: Sequence[Element]
+        :param zoom_filter: Spatial filtering settings; the default disables filtering.
+        :type zoom_filter: Sequence
+        :return: The nodes matching the requested element and spatial filters.
+        :rtype: list
+        """
         selection = []
         node_flags = []
         for i in range(len(self.nodes)):
@@ -530,9 +640,12 @@ class Mesh():
                     out.append(self.nodes[i])
         return out
 
-    # =====================================================
     def get_connected_elements(self):
-        # =====================================================
+        """Return element connectivity counts for all mesh nodes.
+
+        :return: The element connectivity counts for all mesh nodes.
+        :rtype: list
+        """
         out = []
         for i in range(len(self.nodes)):
             out.append(0)
@@ -545,20 +658,40 @@ class Mesh():
 
         return out
 
-    # =====================================================
     def get_node(self, node_index_1):
-        # =====================================================
+        """Return the mesh node with the supplied 1-based index.
+
+        :param node_index_1: 1-based node index.
+        :type node_index_1: int
+        :return: The mesh node with the supplied 1-based index.
+        :rtype: Node
+        """
         return self.nodes[node_index_1 - 1]
 
-    # =====================================================
     def get_element(self, ele_index_1):
-        # =====================================================
+        """Return the mesh element with the supplied 1-based index.
+
+        :param ele_index_1: 1-based element index.
+        :type ele_index_1: int
+        :return: The mesh element with the supplied 1-based index.
+        :rtype: Element
+        """
         return self.elements[ele_index_1 - 1]
 
-    # =====================================================
-    def sort_sel_elements_by_dist_along_dir(self, sel_elements, point, dir_vec, \
-                                            ret_proj_measures=False):
-        # =====================================================
+    def sort_sel_elements_by_dist_along_dir(self, sel_elements, point, dir_vec, ret_proj_measures=False):
+        """Return selected elements by distance along direction in the requested order.
+
+        :param sel_elements: Elements to process.
+        :type sel_elements: Sequence[Element]
+        :param point: Reference point in global coordinates.
+        :type point: Sequence[float]
+        :param dir_vec: Direction along which distances or projections are measured.
+        :type dir_vec: Sequence[float]
+        :param ret_proj_measures: Whether to return projected distances with the sorted objects.
+        :type ret_proj_measures: bool
+        :return: The selected elements by distance along direction in the requested order.
+        :rtype: Union[list, tuple[list, list]]
+        """
         pt = [0.0, 0.0, 0.0]
         dr = [0.0, 0.0, 0.0]
         pt = point[:]
@@ -589,10 +722,20 @@ class Mesh():
         else:
             return sel_ele_sorted
 
-    # =====================================================
-    def sort_sel_nodes_by_dist_along_dir(self, sel_nodes, point, dir_vec, \
-                                         ret_proj_measures=False):
-        # =====================================================
+    def sort_sel_nodes_by_dist_along_dir(self, sel_nodes, point, dir_vec, ret_proj_measures=False):
+        """Return selected nodes by distance along direction in the requested order.
+
+        :param sel_nodes: Nodes to process.
+        :type sel_nodes: Sequence[Node]
+        :param point: Reference point in global coordinates.
+        :type point: Sequence[float]
+        :param dir_vec: Direction along which distances or projections are measured.
+        :type dir_vec: Sequence[float]
+        :param ret_proj_measures: Whether to return projected distances with the sorted objects.
+        :type ret_proj_measures: bool
+        :return: The selected nodes by distance along direction in the requested order.
+        :rtype: Union[list, tuple[list, list]]
+        """
         pt = [0.0, 0.0, 0.0]
         dr = [0.0, 0.0, 0.0]
         pt = point[:]
@@ -613,43 +756,63 @@ class Mesh():
         sort_indices = sorted(list(range(len(proj_measures))), key=lambda x: proj_measures[x])
 
         sel_nodes_sorted = []
-        proj_measures_sorted = []        
+        proj_measures_sorted = []
         for i in sort_indices:
             sel_nodes_sorted.append(sel_nodes[i])
-            proj_measures_sorted.append(proj_measures[i])            
+            proj_measures_sorted.append(proj_measures[i])
 
         if ret_proj_measures:
             return sel_nodes_sorted, proj_measures_sorted
         else:
             return sel_nodes_sorted
 
-    # =====================================================
     def get_ele_indices_for_sel_elements(self, sel_elements):
-        # =====================================================
+        """Return the 1-based indices of the selected elements.
+
+        :param sel_elements: Elements to process.
+        :type sel_elements: Sequence[Element]
+        :return: The 1-based indices of the selected elements.
+        :rtype: list
+        """
         ele_indices = []
         for ele in sel_elements:
             ele_indices.append(ele.index)
         return ele_indices
 
-    # =====================================================
     def get_node_indices_for_sel_nodes(self, sel_nodes):
-        # =====================================================
+        """Return the 1-based indices of the selected nodes.
+
+        :param sel_nodes: Nodes to process.
+        :type sel_nodes: Sequence[Node]
+        :return: The 1-based indices of the selected nodes.
+        :rtype: list
+        """
         node_indices = []
         for node in sel_nodes:
             node_indices.append(node.index)
         return node_indices
 
-    # =====================================================
     def find_material_by_label(self, label):
-        # =====================================================
+        """Find and return material by label.
+
+        :param label: Label used to identify the item.
+        :type label: str
+        :return: The material by label.
+        :rtype: Optional[Material]
+        """
         for material in self.materials:
             if material.label == label:
                 return material
         return None
 
-    # =====================================================
     def find_materials_by_labels(self, labels):
-        # =====================================================
+        """Find and return materials by labels.
+
+        :param labels: Label used to identify the item.
+        :type labels: Sequence[str]
+        :return: The materials by labels.
+        :rtype: list
+        """
         out = []
         for label in labels:
             material = self.find_material_by_label(label)
@@ -657,9 +820,16 @@ class Mesh():
                 out.append(material)
         return out
 
-    # =====================================================
     def find_first_element_with_mat_index(self, mat_index, use_index_in_inp_flag=True):
-        # =====================================================
+        """Find and return first element with material index.
+
+        :param mat_index: Material index used by this operation.
+        :type mat_index: int
+        :param use_index_in_inp_flag: Whether to enable use index in inp.
+        :type use_index_in_inp_flag: int
+        :return: The first element with material index.
+        :rtype: Optional[Element]
+        """
         for element in self.elements:
             material = self.materials[element.get_material_index()]
             if use_index_in_inp_flag:
@@ -670,9 +840,14 @@ class Mesh():
                     return element
         return None
 
-    # =====================================================
-    def set_adj_elements_to_nodes(self, ele_groups=[], mat_filter = []):
-        # =====================================================
+    def set_adj_elements_to_nodes(self, ele_groups=[], mat_filter=[]):
+        """Set adjacent elements to nodes for subsequent calculations.
+
+        :param ele_groups: Element groups used by this operation.
+        :type ele_groups: Sequence[int]
+        :param mat_filter: Material indices to include; an empty sequence includes all materials.
+        :type mat_filter: Sequence[int]
+        """
         for node in self.nodes:
             node.clear_adj_elements()
 
@@ -682,7 +857,7 @@ class Mesh():
                 if element.get_group_index() not in ele_groups:
                     attach = False
             if attach and len(mat_filter) > 0:
-                material = self.materials [element.material_index-1]
+                material = self.materials[element.material_index-1]
                 if not material.index_in_inp in mat_filter:
                     attach = False
             if attach:
@@ -691,9 +866,14 @@ class Mesh():
                         node = self.get_node(node_index)
                         node.attach_element_to_adj_list(element)
 
-    # =====================================================
     def get_adj_elements_to_sel_nodes(self, sel_nodes, ele_groups=[]):
-        # =====================================================
+        """Return adjacent elements to selected nodes.
+
+        :param sel_nodes: Nodes to process.
+        :type sel_nodes: Sequence[Node]
+        :param ele_groups: Element groups used by this operation.
+        :type ele_groups: Sequence[int]
+        """
         # make copy of list of nodes
         nodes_aux = []
         for node in self.nodes:
@@ -721,9 +901,7 @@ class Mesh():
                             node = nodes_aux[node_index - 1]
                             node.attach_element_to_adj_list(element)
 
-    # # =====================================================
     # def get_adj_elements_to(self, src_list, target_ele_group_index, at_time=None):
-    #     # =====================================================
     #     out = []
     #     for element in src_list:
     #         out.append(None)
@@ -745,9 +923,20 @@ class Mesh():
     #             out[-1] = self.get_element(common[0])
     #     return out
 
-    # =====================================================
     def get_adj_elements_to(self, src_list, target_ele_group_index, at_time=None, target_ele_mat_filter=[]):
-        # =====================================================
+        """Return target-group elements adjacent to the supplied source elements.
+
+        :param src_list: Src list used by this operation.
+        :type src_list: Sequence[Element]
+        :param target_ele_group_index: Target element group index used by this operation.
+        :type target_ele_group_index: int
+        :param at_time: Physical time at which the model state is evaluated.
+        :type at_time: Optional[float]
+        :param target_ele_mat_filter: Target element material filter used by this operation.
+        :type target_ele_mat_filter: Sequence[int]
+        :return: The target-group elements adjacent to the supplied source elements.
+        :rtype: list
+        """
         out = []
         for element in src_list:
             aux = []
@@ -759,7 +948,7 @@ class Mesh():
                     if target_ele_mat_filter == []:
                         tmp.append(adj_ele.index)
                     else:
-                        material = self.materials [adj_ele.get_material_index()]
+                        material = self.materials[adj_ele.get_material_index()]
                         if material.get_user_index() in target_ele_mat_filter:
                             tmp.append(adj_ele.index)
                 if tmp != []:
@@ -770,25 +959,36 @@ class Mesh():
                     next = aux[i + 1]
                     tmp = list(set(common) & set(next))
                     common = tmp[:]
-                for i in range (len(common)):
-                #if len(common) == 1:
+                for i in range(len(common)):
+                    # if len(common) == 1:
                     #out[-1] = self.get_element(common[0])
-                    out.append (self.get_element(common[i]))
+                    out.append(self.get_element(common[i]))
         return out
 
-    # =====================================================
     def get_ltf(self, ltf_index_1):
-        # =====================================================
+        """Return the load-time function with the supplied 1-based index.
+
+        :param ltf_index_1: 1-based load-time function index.
+        :type ltf_index_1: int
+        :return: The load-time function with the supplied 1-based index.
+        :rtype: Optional[Ltf]
+        """
         if ltf_index_1 <= 0:
             return None
         if ltf_index_1 > len(self.ltfs):
             return None
         return self.ltfs[ltf_index_1 - 1]
 
-    # =====================================================
     def get_continuum_ext_faces(self, only_active=False, time=0.0):
-        # =====================================================
-        # return list of [ [ele_index_1, face_index_1],.....] being on the external contour
+        """Return continuum faces that lie on the model exterior boundary.
+
+        :param only_active: Whether to exclude elements that are inactive at the requested time.
+        :type only_active: bool
+        :param time: Physical time at which the value or state is requested.
+        :type time: float
+        :return: Pairs of 1-based element and face indices on the exterior continuum boundary.
+        :rtype: list
+        """
         cont_ele = self.get_list_of_elements(Element.GROUP_CONTINUUM, only_active=only_active, time=time)
         ext_faces = []
         for ele in cont_ele:
@@ -853,9 +1053,8 @@ class Mesh():
         return ext_faces
 
 
-# =====================================================
 def main():
-    # =====================================================
+    """Run this module's example or command-line workflow."""
     mesh = Mesh('..\ExamplesData\Plate-1')
     mesh.set_adj_elements_to_nodes([Element.GROUP_SHELL])
     node = mesh.nodes[0]
@@ -867,9 +1066,9 @@ def main():
     ##print len(aux)
 
 
-##    for e in mesh.elements:
+# for e in mesh.elements:
 ##        print e.index,e.label,e.nodes
-##    for node in mesh.nodes:
+# for node in mesh.nodes:
 ##        print node.index,node.xyz
 
 

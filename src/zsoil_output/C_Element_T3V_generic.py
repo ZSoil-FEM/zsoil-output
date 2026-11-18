@@ -1,75 +1,133 @@
+"""Provide volumetric operations for generic three-node triangles.
+
+This module is part of ``zsoil-output``, a Python SDK developed for use with ZSoil FEM to
+read model data and output-result files.
+
+The :class:`Element_T3V_generic` implementation combines triangular surface and volumetric
+helpers for formulations used by ZSoil continuum elements.
+"""
+
 from .C_Element_Surf_generic import *
 from .C_Element_Volumic_generic import *
 from .C_Element_T3_generic import *
 import numpy as np
 
-#=====================================================
+
 class Element_T3V_generic (Element_Volumic_generic):
-#=====================================================
+    def __init__(self):
+        """Initialize the element T3 V generic object for the supplied project data."""
+        self.T3S = Element_T3_generic()
 
-    #=====================================================
-    def __init__ (self):
-    #=====================================================
-        self.T3S = Element_T3_generic ()
+    def get_quadr(self, quadr_enum):
+        """Return quadrature data for the requested integration rule.
 
-    #=====================================================
-    def get_quadr (self,quadr_enum):
-    #=====================================================
-        return self.T3S.get_quadr (quadr_enum)
+        :param quadr_enum: Quadrature-rule identifier.
+        :type quadr_enum: int
+        :return: The quadrature data for the requested integration rule.
+        :rtype: tuple[int, Sequence, Sequence]
+        """
+        return self.T3S.get_quadr(quadr_enum)
 
-    #=====================================================
-    def get_xsi (self,quadr_enum,igaus):
-    #=====================================================
-        return self.T3S.get_xsi (quadr_enum,igaus)
+    def get_xsi(self, quadr_enum, igaus):
+        """Return natural coordinates for a requested quadrature point.
 
-    #=====================================================
-    def get_N (self,xsi):
-    #=====================================================
-        return self.T3S.get_N (xsi)
+        :param quadr_enum: Quadrature-rule identifier.
+        :type quadr_enum: int
+        :param igaus: Zero-based integration-point index.
+        :type igaus: int
+        :return: The natural coordinates for a requested quadrature point.
+        :rtype: Optional[Sequence[float]]
+        """
+        return self.T3S.get_xsi(quadr_enum, igaus)
 
-    #=====================================================
-    def get_N0 (self):
-    #=====================================================
+    def get_N(self, xsi):
+        """Return shape-function values at the requested natural coordinates.
+
+        :param xsi: Natural coordinates inside the reference element.
+        :type xsi: Sequence[float]
+        :return: The shape-function values at the requested natural coordinates.
+        :rtype: numpy.ndarray
+        """
+        return self.T3S.get_N(xsi)
+
+    def get_N0(self):
+        """Return shape-function values at the element center.
+
+        :return: The shape-function values at the element center.
+        :rtype: numpy.ndarray
+        """
         return self.T3S.get_N0()
 
-    #=====================================================
-    def get_DN (self,xsi):
-    #=====================================================
-        return self.T3S.get_DN (xsi)
+    def get_DN(self, xsi):
+        """Return shape-function derivatives at the requested natural coordinates.
 
-    #=====================================================
-    def get_DN0 (self):
-    #=====================================================
-        return self.T3S.get_DN0 ()
+        :param xsi: Natural coordinates inside the reference element.
+        :type xsi: Sequence[float]
+        :return: The shape-function derivatives at the requested natural coordinates.
+        :rtype: numpy.ndarray
+        """
+        return self.T3S.get_DN(xsi)
 
-    #=====================================================
-    def get_DN_ex (self,quadr_enum,igaus):
-    #=====================================================
-        return self.T3S.get_DN_ex (quadr_enum,igaus)
+    def get_DN0(self):
+        """Return shape-function derivatives at the element center.
 
-    #=====================================================
-    def get_N_ex (self,quadr_enum,igaus):
-    #=====================================================
+        :return: The shape-function derivatives at the element center.
+        :rtype: numpy.ndarray
+        """
+        return self.T3S.get_DN0()
+
+    def get_DN_ex(self, quadr_enum, igaus):
+        """Return shape-function derivatives at a requested quadrature point.
+
+        :param quadr_enum: Quadrature-rule identifier.
+        :type quadr_enum: int
+        :param igaus: Zero-based integration-point index.
+        :type igaus: int
+        :return: The shape-function derivatives at a requested quadrature point.
+        :rtype: numpy.ndarray
+        """
+        return self.T3S.get_DN_ex(quadr_enum, igaus)
+
+    def get_N_ex(self, quadr_enum, igaus):
+        """Return shape-function values at a requested quadrature point.
+
+        :param quadr_enum: Quadrature-rule identifier.
+        :type quadr_enum: int
+        :param igaus: Zero-based integration-point index.
+        :type igaus: int
+        :return: The shape-function values at a requested quadrature point.
+        :rtype: numpy.ndarray
+        """
         return self.T3S.get_N_ex(quadr_enum, igaus)
 
-    #=====================================================
-    def get_nr_of_faces (self):
-    #=====================================================
+    def get_nr_of_faces(self):
+        """Return the number of faces defined for the reference element.
+
+        :return: The number of faces defined for the reference element.
+        :rtype: int
+        """
         return 3
 
+    def get_face_node_indices(self, face_index_1):
+        """Return the local-node indices of a requested element face.
 
-    #=====================================================
-    def get_face_node_indices(self,face_index_1):
-    #=====================================================
+        :param face_index_1: 1-based face index.
+        :type face_index_1: int
+        :return: The local-node indices of a requested element face.
+        :rtype: list
+        """
         n1 = face_index_1
         n2 = n1 + 1
         if n2 > 3:
             n2 = 1
-        return [n1,n2]
+        return [n1, n2]
 
-    # =============================================
-    def get_face_info (self,face_index_1):
-    # =============================================
-        return 'L2',self.get_face_node_indices (face_index_1)
+    def get_face_info(self, face_index_1):
+        """Return the type and local-node indices of a requested element face.
 
-
+        :param face_index_1: 1-based face index.
+        :type face_index_1: int
+        :return: The type and local-node indices of a requested element face.
+        :rtype: tuple[str, list[int]]
+        """
+        return 'L2', self.get_face_node_indices(face_index_1)
