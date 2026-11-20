@@ -1,144 +1,10 @@
-@GeoDev_SARL_version: 26 18 26.03
-3 # dimension 2 or 3
-2 # number of materials
-0 # number of Existence functions
-3 # number of nodal forces(*.inl)
-7056 # number of nodes  (*.ing)
-0 # number of continuum 2D elements
-6000 # number of continuum 3D elements
-0 # number of shell elements (*.ilg),(*.ilm)
-100 # number of Shell one layer elements
-0 # number of Beams (*.ibg),(*ibm)
-0 # number of Beams relaxation codes  (*.ibl)
-0 # number of truss elements (*.itg),(*.itm)
-0 # number of Fixed Anchor Zones
-0 # number of loads for trusses	(*.itl )
-0 # number of Piles
-0 # number of Nails
-0 # number of Mebranes elements
-0 # number of Infinite elements
-0 # number of contact lines (*.icg), (*.icm)
-0 # number of inetrfaces (*.ics)
-0 # number of water Seepage's (*.ipg) (*.ipm)
-0 # number of convection element (*.ivg)
-0 # number of viscous dampers (*.vsd)
-1641 # number of boundary conditions (*.inb)
-0 # number of surface elements (*.pbc)
-0 # number of water bound. cond. (*.iwb)
-0 # number of Heat BC	(*.iab)
-0 # number of Humidity BC (*.imb)
-0 # number of pressure Heads loads	(*.iph)
-0 # number of water flux (*.iwf)
-0 # number of heat flux (*.ihf)
-0 number of humidity flux (*.iuf)# 
-3 Not used
-0 # number of surface loads (*.isl)
-0 # number of Surface load defined by Pressure head
-0 # number of init. cond. geom. (*.iig)
-0 # number of ini. stress cond. (*.izg)
-0 # number of Heat IC (*.iag)
-0 # number of Heat IC values (*.iav)
-0 # number of Humdity IC (*.img)
-0 # number of Humidity IC values (*.imv)
-0 # number of Imposed strains
-0 # number of ini. strains cond. (*.ieg)
-0 # number of constant eps0 (*.ist)
-0 # number of Nodal Links (*.gnl)
-0 # number of kinematic constrains  (*.ikg)
-0 # number of nodal masses (*.inm)
-0 # number of element masses (*.iem)
-0 # number of element masses 
-0 # number of Local bases
-0 # number of geometrical points
-0 # number of polylines
-0 # number of lines
-0 # number of arcs
-0 # number of circles
-0 # number of surfaces
-0 # number of auxiliary planes
-0 # number of continuum 2D subdomains
-0 # number of continuum 3D subdomains
-0 # number of beam subdomains
-0 # number of truss subdomains
-0 # number of membrane subdomains
-0 # number of shell subdomains
-0 # number of macro seepages
-0 # number of macro convections
-0 # number of macro interfaces
-0 # number of macro interfaces on structural subdomains
-0 # number of macro dampers
-0 # number of point loads
-0 # number of macro surface loads
-0 # number of macro heat fluxes
-0 # number of macro humidity fluxes
-0 # number of macro fluid fluxes
-0 # number of macro solid BC
-0 # number of macro pressure BC
-0 # number of macro pressure heads
-0 # number of macro heat BC
-0 # number of macro humidity BC
-0 # number of mesh tying elements
-0 # number of beam loads
-0 # number of boreholes
-0 # number of initial velocities/accelerations
-0 # number of shell higes
-0 # number beam reinforcemnts
-0 # number data super elements
-0 # number of Tendons
-0 # number of auxiliary points
-0 # number of Tendons
-0 # number of Heat exchangers
-0 # number of movement paths
-0 # number of Point loads on elements
-0 # number of Line loads on elements
-0 # number of Surface loads on elements
-0 # number of Line masses on elements
-0 # number of Surface masses on elements
-0 # number of Splines
-0 # number of Heat Exchanger heat fluxes
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-ASSOCIATED_PROJECTS:
-HEAT: -
-HUMIDITY: -
-FREE_FILED_MOTION: -
-FLOW: -
+@ZACE_SERVICES_S.A_version: 20.01 18 20.01
+3 1 2 0 3 7056 1641 3 0 0 0 6000 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 1 1 
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 100 0 0 0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+-
+-
+-
 STANDARD
 kN  m  deg  min  C  
 kN  m  deg  min  C  
@@ -160,12 +26,10 @@ Default
 0 0 0 0 35303.6 1 1 1 
 NONL_GEOM 0
 CONSTRUCTION 0  0
-THM_SETTINGS
-BISHOP_FLAG 0
 PROJECT_PRESELECTION
 5 0 0 0 0 1 
 NUM_MATERIALS= 2
-MATERIAL  26.00 1
+MATERIAL  20.01 1
 Elastic
 No name
 BUTTONS= 0 1 0 1 1 0 0 0 0 0 0 0 0 0
@@ -180,26 +44,24 @@ BUTTONS= 0 1 0 1 1 0 0 0 0 0 0 0 0 0
 0  0  0  0
 0  0  0  0
 -1  26.5  20  10  0
- FLOW-> 1  1  1  0  1  0  0  0  1  0  3.37e+38  0  2  1  0  1  1000000  100  0  0  100  1  0  0  1e+38  1  2  0
-0  0.3  0.6  30  0.5  26.5
+ FLOW-> 1  1  1  0  1  0  0  0  1  0  3.37e+038  0  2  1  0  1  1e+006  100
 0  0  0  0
 0  0  0  0
 CREEP-> 0  0  0  0  0  0  0  0  4  0  500  50  5  0  0  0  0
  NONL->  
- HEAT-> 1e-05  0.144  2000  0  105000  0.00104167  300  4000  20  0  1  
-1  0.036  0  4184  0  
+ HEAT-> 1e-005  0.144  2000  0  105000  0.00104167  300  4000  20  0  1  
 0  0  0
-HUMID-> 0.01  0.05  0.75  3.6e-07  0  
- INIS-> 1  1  0  1  0  0  0  1  0  0  0  1
+HUMID-> 0.01  0.05  0.75  3.6e-007  0  
+ INIS-> 1  1  0  1  0  0  0  1  0  0
  STAB-> 0  0  0  0  0  0  0  0  0  0
  DISC->  
  DAMP-> 0  0  0  0  0  0  0
-MATERIAL  26.00 2
+MATERIAL  20.01 2
 Shell Elastic
 No name
 BUTTONS= 1 1 0 0 1 0 0 0 0 0 0 0 0 0
 
- ELAS-> 30000000  0.2
+ ELAS-> 3e+007  0.2
 0  0
 0  0
 0  0
@@ -208,12 +70,12 @@ BUTTONS= 1 1 0 0 1 0 0 0 0 0 0 0 0 0
  DENS-> 0  1  1
 0
 0
- FLOW-> 1  1  1  1  0  0  1  0  0  2  3.37e+38
+ FLOW-> 1  1  1  1  0  0  1  0  0  2  3.37e+038
 CREEP-> 0  0  0  0  0  0  0  0  4  0  500  50  5  0  0  0  0
  NONL-> 
- HEAT-> 1e-05  0
+ HEAT-> 1e-005  0
 HUMID-> 0.01  
- INIS-> 1  1  0  1  0  0  0  1  0  0  0  1
+ INIS-> 1  1  0  1  0  0  0  1  0  0
  STAB-> 0  0  0  0  0  0  0  0  0  0
  DISC->  
  DAMP-> 0  0  0  0  0  0  0
@@ -253,7 +115,7 @@ Default
 0 0 0 0 -1 0
 0 0 -1 0
 0
-1  1  0  1  0  0  0  1  0  0  0  1
+1  1  0  1  0  0  0  1  0  0
 RAM_MAXIMUM
 100
 SOLVER_TYP
@@ -317,15 +179,13 @@ PRJ_DESCRIPTION
   
 UPD_COORD_CONSTRUCTION_LARGE_DEF
 0
-PARALLEL_SETTINGS
-1  20  0.05
 ARC_LENGTH
 0  1
 0
 0
 
 AUGMENTED_LAGRANGIAN
-0  5  1e-06  2  100
+0  5  1e-006  2  100
 100  1
 0  1  0  1
 SEISMIC_DATA 0
@@ -337,9 +197,9 @@ CONTACT_PARAMETERS 1
 No name
 Elastic
 1 0 0 0 0
-0.6 0 0 0 1e+38 1e+38
-0.6 0 0 0 1e+38 1e+38
-0 0 0 0 1e+38 1e+38
+0.6 0 0 0 1e+038 1e+038
+0.6 0 0 0 1e+038 1e+038
+0 0 0 0 1e+038 1e+038
 EVOLUTION_FUN 0
 .icf
 
@@ -50030,14 +49890,4 @@ SEDIMENTATION 0
 0 0
 
 .bcl
-
-.hex
-
-.ple
-
-.pme
-
-.pth
-
-.hef
 

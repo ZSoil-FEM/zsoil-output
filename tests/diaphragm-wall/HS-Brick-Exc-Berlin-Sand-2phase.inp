@@ -1,144 +1,10 @@
-@GeoDev_SARL_version: 26 9.05 26.03
-2 # dimension 2 or 3
-8 # number of materials
-12 # number of Existence functions
-5 # number of nodal forces(*.inl)
-4204 # number of nodes  (*.ing)
-3943 # number of continuum 2D elements
-0 # number of continuum 3D elements
-0 # number of shell elements (*.ilg),(*.ilm)
-0 # number of Shell one layer elements
-32 # number of Beams (*.ibg),(*ibm)
-0 # number of Beams relaxation codes  (*.ibl)
-27 # number of truss elements (*.itg),(*.itm)
-0 # number of Fixed Anchor Zones
-27 # number of loads for trusses	(*.itl )
-0 # number of Piles
-0 # number of Nails
-0 # number of Mebranes elements
-0 # number of Infinite elements
-94 # number of contact lines (*.icg), (*.icm)
-0 # number of inetrfaces (*.ics)
-62 # number of water Seepage's (*.ipg) (*.ipm)
-0 # number of convection element (*.ivg)
-0 # number of viscous dampers (*.vsd)
-131 # number of boundary conditions (*.inb)
-0 # number of surface elements (*.pbc)
-0 # number of water bound. cond. (*.iwb)
-0 # number of Heat BC	(*.iab)
-0 # number of Humidity BC (*.imb)
-1 # number of pressure Heads loads	(*.iph)
-0 # number of water flux (*.iwf)
-0 # number of heat flux (*.ihf)
-0 number of humidity flux (*.iuf)# 
-0 Not used
-0 # number of surface loads (*.isl)
-1 # number of Surface load defined by Pressure head
-0 # number of init. cond. geom. (*.iig)
-1 # number of ini. stress cond. (*.izg)
-0 # number of Heat IC (*.iag)
-0 # number of Heat IC values (*.iav)
-0 # number of Humdity IC (*.img)
-0 # number of Humidity IC values (*.imv)
-0 # number of Imposed strains
-0 # number of ini. strains cond. (*.ieg)
-0 # number of constant eps0 (*.ist)
-0 # number of Nodal Links (*.gnl)
-0 # number of kinematic constrains  (*.ikg)
-0 # number of nodal masses (*.inm)
-0 # number of element masses (*.iem)
-0 # number of element masses 
-0 # number of Local bases
-0 # number of geometrical points
-0 # number of polylines
-0 # number of lines
-0 # number of arcs
-0 # number of circles
-0 # number of surfaces
-0 # number of auxiliary planes
-0 # number of continuum 2D subdomains
-0 # number of continuum 3D subdomains
-0 # number of beam subdomains
-0 # number of truss subdomains
-0 # number of membrane subdomains
-0 # number of shell subdomains
-0 # number of macro seepages
-0 # number of macro convections
-0 # number of macro interfaces
-0 # number of macro interfaces on structural subdomains
-0 # number of macro dampers
-0 # number of point loads
-0 # number of macro surface loads
-0 # number of macro heat fluxes
-0 # number of macro humidity fluxes
-0 # number of macro fluid fluxes
-0 # number of macro solid BC
-0 # number of macro pressure BC
-0 # number of macro pressure heads
-0 # number of macro heat BC
-0 # number of macro humidity BC
-0 # number of mesh tying elements
-0 # number of beam loads
-0 # number of boreholes
-0 # number of initial velocities/accelerations
-0 # number of shell higes
-0 # number beam reinforcemnts
-0 # number data super elements
-0 # number of Tendons
-0 # number of auxiliary points
-0 # number of Tendons
-0 # number of Heat exchangers
-0 # number of movement paths
-0 # number of Point loads on elements
-0 # number of Line loads on elements
-0 # number of Surface loads on elements
-0 # number of Line masses on elements
-0 # number of Surface masses on elements
-0 # number of Splines
-0 # number of Heat Exchanger heat fluxes
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-0 Not used
-ASSOCIATED_PROJECTS:
-HEAT: -
-HUMIDITY: -
-FREE_FILED_MOTION: -
-FLOW: -
+@ZACE_SERVICES_S.A_version: 20.01 9.05 20.01
+2 1 8 12 5 4204 131 0 0 3943 0 0 0 0 0 0 0 62 0 0 1 0 27 27 0 94 1 1 1 1 
+0 0 0 0 0 0 0 0 32 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+-
+-
+-
 STANDARD
 kN  m  deg  day  C  
 kN  m  deg  day  C  
@@ -154,27 +20,25 @@ Default  9.05
 DYN_CONTROL 1
 Default
 0 0 0 0 0 -0.3 0.25 0.5
-0 1.27094e+08 1 1 1
+0 1.27094e+008 1 1 1
 0
 -0.3 0.5 1
 0 0 0 0 0
 PSH_CONTROL 1
 Default
-0 0 1 0 7.32055e+10 1 0 0 
+0 0 1 0 7.32055e+010 1 0 0 
 NONL_GEOM 0
 CONSTRUCTION 1  0
 1  3  0.25  1  0.25
-THM_SETTINGS
-BISHOP_FLAG 0
 PROJECT_PRESELECTION
 5 0 0 0 0 1 
 NUM_MATERIALS= 8
-MATERIAL  26.00 1
+MATERIAL  20.01 1
 HS-small strain stiffness
 Sand-0-to-20m
 BUTTONS= 1 1 0 0 1 0 1 0 0 1 0 0 0 0
 
- ELAS-> 180000  0.2  0.5  100  5  0  1  405000  0.0002  2  1  0  90  0  2  1.6
+ ELAS-> 180000  0.2  0.5  100  5  0  1  405000  0.0002  2  1
 0  0  0  0  0  0  0  0
  GEOM-> 0.1  
  MAIN-> 1  0  0  0  0  0  
@@ -182,31 +46,29 @@ BUTTONS= 1 1 0 0 1 0 1 0 0 1 0 0 0 0
 0  0  0  0
 0  0  0  0
 -1  26.5  20  10  0
- FLOW-> 8.640000000000001  8.640000000000001  1  0  1  0  0  0  1  0  3.37e+38  0  5  1  0  1  1000000  100  0  0  100  1  0  0  1e+38  1  2  0
-0  0.3  0.6  30  0.5  26.5
+ FLOW-> 8.64  8.64  1  0  1  0  0  0  1  0  3.37e+038  0  5  1  0  1  1e+006  100
 0  0  0  0
 0  0  0  0
 CREEP-> 0  0  0  0  0  0  0  0  4  0  500  50  5  0  0  0  0
  NONL-> 35  5  1  45000  0.9  0  0.25  0  1  0
-68025.88466595505  1.716104860921575  0.426424  100  45000
+68025.89004451231  1.716100722136105  0.426424  100  45000
 0  0
-0  10  0  1  0.426424  0  1  0  0  0
+0  10  0  1  0.426424  0  1  0
 0  0  0  0  0  0  0  
 0  0  0  0  0  0  0  
- HEAT-> 1e-05  207.36  2000  0  105000  1.5  0.208333  4000  20  0  1  
-1  51.84  0  4184  0  
+ HEAT-> 1e-005  207.36  2000  0  105000  1.5  0.208333  4000  20  0  1  
 0  0  0
-HUMID-> 0.01  0.05  0.75  3.6e-07  0  
- INIS-> 0.43  0.43  0  1  0  0  0  1  0  0  0  1
+HUMID-> 0.01  0.05  0.75  3.6e-007  0  
+ INIS-> 0.43  0.43  0  1  0  0  0  1  0  0
  STAB-> 0  0  0  0  0  0  0  0  0  0
  DISC->  
  DAMP-> 0  0  0  0  0  0  0
-MATERIAL  26.00 2
+MATERIAL  20.01 2
 HS-small strain stiffness
 Sand-below-20m
 BUTTONS= 1 1 0 0 1 0 1 0 0 1 0 0 0 0
 
- ELAS-> 300000  0.2  0.5  100  5  0  1  675000  0.0002  2  1  0  90  0  2  1.6
+ ELAS-> 300000  0.2  0.5  100  5  0  1  675000  0.0002  2  1
 0  0  0  0  0  0  0  0
  GEOM-> 0.1  
  MAIN-> 1  0  0  0  0  0  
@@ -214,26 +76,24 @@ BUTTONS= 1 1 0 0 1 0 1 0 0 1 0 0 0 0
 0  0  0  0
 0  0  0  0
 -1  26.5  20  10  0
- FLOW-> 8.640000000000001  8.640000000000001  1  0  1  0  0  0  1  0  3.37e+38  0  5  1  0  1  1000000  100  0  0  100  1  0  0  1e+38  1  2  0
-0  0.3  0.6  30  0.5  26.5
+ FLOW-> 8.640000000000001  8.640000000000001  1  0  1  0  0  0  1  0  3.37e+038  0  5  1  0  1  1000000  100
 0  0  0  0
 0  0  0  0
 CREEP-> 0  0  0  0  0  0  0  0  4  0  500  50  5  0  0  0  0
  NONL-> 38  6  1  75000  0.9  0  0.25  0  1  0
-93160.1352837708  1.931327460824228  0.384339  100  67500
+109762.2286405626  2.264834835857553  0.384339  100  75000
 0  0
-0  10  0  1  0.426424  0  1  0  0  0
+0  10  0  1  0.426424  0  1  0
 0  0  0  0  0  0  0  
 0  0  0  0  0  0  0  
- HEAT-> 1e-05  207.36  2000  0  105000  1.5  0.208333  4000  20  0  1  
-1  51.84  0  4184  0  
+ HEAT-> 1e-005  207.36  2000  0  105000  1.5  0.208333  4000  20  0  1  
 0  0  0
-HUMID-> 0.01  0.05  0.75  3.6e-07  0  
- INIS-> 0.38  0.38  0  1  0  0  0  1  0  0  0  1
+HUMID-> 0.01  0.05  0.75  3.6e-007  0  
+ INIS-> 0.38  0.38  0  1  0  0  0  1  0  0
  STAB-> 0  0  0  0  0  0  0  0  0  0
  DISC->  
  DAMP-> 0  0  0  0  0  0  0
-MATERIAL  26.00 3
+MATERIAL  20.01 3
 Elastic Beam
 beam
 BUTTONS= 1 1 1 1 0 0 0 0 0 0 0 0 0 0
@@ -253,13 +113,13 @@ BUTTONS= 1 1 1 1 0 0 0 0 0 0 0 0 0 0
  FLOW->  
 CREEP-> 0  0  0  0  0  0  0  0  4  0  500  50  5  0  0  0  0
  NONL-> 
- HEAT-> 1e-05  0
+ HEAT-> 1e-005  0
 HUMID-> 0.01  
- INIS-> 0  0  0  1  0  0  0  1  0  0  0  1
+ INIS-> 0  0  0  1  0  0  0  1  0  0
  STAB-> 0  0  0  0  0  0  0  0  0  0
  DISC->  
  DAMP-> 0  0  0  0  0  0  0
-MATERIAL  26.00 4
+MATERIAL  20.01 4
 Truss/Cable
 ANCHOR 1
 BUTTONS= 1 1 1 0 0 0 0 0 0 0 0 0 0 0
@@ -279,13 +139,13 @@ CREEP-> 0  0  0  0
  NONL-> FIRE_DATABASE 0 OFF
 0  0  1  1  0.02  0.15  0.2
 0  0  0  0
- HEAT-> 1e-05  0
+ HEAT-> 1e-005  0
 HUMID-> 0.01  
- INIS-> 0  0  0  1  0  0  0  1  0  0  0  1
+ INIS-> 0  0  0  1  0  0  0  1  0  0
  STAB-> 0  0  0  0  0  0  0  0  0  0
  DISC->  
  DAMP-> 0  0  0  0  0  0  0
-MATERIAL  26.00 5
+MATERIAL  20.01 5
 Truss/Cable
 ANCHOR 2
 BUTTONS= 1 1 1 0 0 0 0 0 0 0 0 0 0 0
@@ -305,13 +165,13 @@ CREEP-> 0  0  0  0
  NONL-> FIRE_DATABASE 0 OFF
 0  0  1  1  0.02  0.15  0.2
 0  0  0  0
- HEAT-> 1e-05  0
+ HEAT-> 1e-005  0
 HUMID-> 0.01  
- INIS-> 0  0  0  1  0  0  0  1  0  0  0  1
+ INIS-> 0  0  0  1  0  0  0  1  0  0
  STAB-> 0  0  0  0  0  0  0  0  0  0
  DISC->  
  DAMP-> 0  0  0  0  0  0  0
-MATERIAL  26.00 6
+MATERIAL  20.01 6
 Truss/Cable
 ANCHOR 3
 BUTTONS= 1 1 1 0 0 0 0 0 0 0 0 0 0 0
@@ -331,13 +191,13 @@ CREEP-> 0  0  0  0
  NONL-> FIRE_DATABASE 0 OFF
 0  0  1  1  0.02  0.15  0.2
 0  0  0  0
- HEAT-> 1e-05  0
+ HEAT-> 1e-005  0
 HUMID-> 0.01  
- INIS-> 0  0  0  1  0  0  0  1  0  0  0  1
+ INIS-> 0  0  0  1  0  0  0  1  0  0
  STAB-> 0  0  0  0  0  0  0  0  0  0
  DISC->  
  DAMP-> 0  0  0  0  0  0  0
-MATERIAL  26.00 7
+MATERIAL  20.01 7
 Contact
 contact
 BUTTONS= 1 1 0 0 0 0 1 0 0 0 0 0 0 0
@@ -348,8 +208,7 @@ BUTTONS= 1 1 0 0 0 0 1 0 0 0 0 0 0 0
  GEOM-> 0.1  
  MAIN->  
  DENS-> 10  
- FLOW-> 1  1  1  1  0  0  1  0  0  2  3.37e+38  1  0  0  1  2  0
-0  0.3  0.6  30  0.5  26.5
+ FLOW-> 1  1  1  1  0  0  1  0  0  2  3.37e+038
 CREEP-> 0  0  0  0  0  0  0  0  4  0  500  50  5  0  0  0  0
  NONL-> Base table
 28  0  0  1  0
@@ -357,11 +216,11 @@ CREEP-> 0  0  0  0  0  0  0  0  4  0  500  50  5  0  0  0  0
 0  0  0
  HEAT-> 10  
 HUMID-> 0  
- INIS-> 0  0  0  1  0  0  0  1  0  0  0  1
+ INIS-> 0  0  0  1  0  0  0  1  0  0
  STAB-> 0  0  0  0  0  0  0  0  0  0
  DISC->  
  DAMP-> 0  0  0  0  0  0  0
-MATERIAL  26.00 8
+MATERIAL  20.01 8
 Seepage
 seepage
 BUTTONS= 0 0 0 0 1 0 0 0 0 0 0 0 0 0
@@ -379,9 +238,9 @@ BUTTONS= 0 0 0 0 1 0 0 0 0 0 0 0 0 0
  FLOW-> 1  0  
 CREEP-> 0  0  0  0  0  0  0  0  4  0  500  50  5  0  0  0  0
  NONL->  
- HEAT-> 1e-05  0
+ HEAT-> 1e-005  0
 HUMID-> 0.01  
- INIS-> 0  0  0  1  0  0  0  1  0  0  0  1
+ INIS-> 0  0  0  1  0  0  0  1  0  0
  STAB-> 0  0  0  0  0  0  0  0  0  0
  DISC->  
  DAMP-> 0  0  0  0  0  0  0
@@ -410,16 +269,16 @@ EXIST_FUNC 20
 0 8 
 5 BEAM
 1
-0.5 1e+36 
+0.5 1e+036 
 6 ANCHOR_1
 1
-3 1e+36 
+3 1e+036 
 7 ANCHOR_2
 1
-5 1e+36 
+5 1e+036 
 8 ANCHOR_3
 1
-7 1e+36 
+7 1e+036 
 9 NODAL FLUID BC
 0
 
@@ -455,7 +314,7 @@ EXIST_FUNC 20
 5.5 7.5 
 20 SEEP-1 4
 1
-7.5 1e+36 
+7.5 1e+036 
 LOAD_FUN 5
 1 3 UNLOAD_1
 No flags
@@ -527,7 +386,7 @@ Default
 0 0 0 0 -1 0
 0 0 -1 0
 1
-0.426  0.426  0  1  0  0  0  1  0  0  0  1
+0.426  0.426  0  1  0  0  0  1  0  0
 RAM_MAXIMUM
 100
 SOLVER_TYP
@@ -591,15 +450,13 @@ PRJ_DESCRIPTION
   
 UPD_COORD_CONSTRUCTION_LARGE_DEF
 0
-PARALLEL_SETTINGS
-1  20  0.05
 ARC_LENGTH
 0  1
 0
 0
 
 AUGMENTED_LAGRANGIAN
-0  3  1e-05  2  100
+0  3  1e-005  2  100
 100  1
 0  1  0  1
 SEISMIC_DATA 0
@@ -611,16 +468,16 @@ CONTACT_PARAMETERS 1
 Sand-0-to-20m
 HS-small strain stiffness
 1 1 35 1 5
-0.6 0.6 0.6 0 1e+38 1e+38
-0.6 0.6 0.6 0 1e+38 1e+38
-0 0 0 0 1e+38 1e+38
+0.6 0.6 0.6 0 1e+038 1e+038
+0.6 0.6 0.6 0 1e+038 1e+038
+0 0 0 0 1e+038 1e+038
 2
 Sand-below-20m
 HS-small strain stiffness
 1 1 38 1 6
-0.6 0.6 0.6 0 1e+38 1e+38
-0.6 0.6 0.6 0 1e+38 1e+38
-0 0 0 0 1e+38 1e+38
+0.6 0.6 0.6 0 1e+038 1e+038
+0.6 0.6 0.6 0 1e+038 1e+038
+0 0 0 0 1e+038 1e+038
 EVOLUTION_FUN 0
 .icf
 
@@ -12650,24 +12507,14 @@ No name
 2
 Straight cable
 1 1 1 2
-0.000000e+00 2.000000e-01
-1.000000e+00 2.000000e-01
+0.000000e+000 2.000000e-001
+1.000000e+000 2.000000e-001
 Cable geom. 1
 1 1 2 3
-0.000000e+00 2.000000e-01
-5.000000e-01 1.000000e-01
-1.000000e+00 2.000000e-01
+0.000000e+000 2.000000e-001
+5.000000e-001 1.000000e-001
+1.000000e+000 2.000000e-001
 0 0
 
 .bcl
-
-.hex
-
-.ple
-
-.pme
-
-.pth
-
-.hef
 

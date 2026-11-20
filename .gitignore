@@ -262,3 +262,13 @@ desktop.ini
 *.xrn
 *.xst
 *.xxc
+
+# test projects: keep only the .inp input files, ignore everything ZSoil generates
+tests/**
+!tests/**/
+!tests/**/*.inp
+!tests/**/*.INP
+
+# Perforce <-> git sync: script and its local state (internal, not published)
+tools/
+.p4sync/

@@ -43,10 +43,10 @@ class ReferenceGeometry:
         self.nen = {'L2': 2, 'T3': 3, 'Q4': 4, 'TH4': 4, 'W6': 6, 'B8': 8}[self.label]
         self.reference = None
         if self.label == 'Q4':
-            from C_Element_Q4_generic import Element_Q4_generic
+            from .C_Element_Q4_generic import Element_Q4_generic
             self.reference = Element_Q4_generic()
         elif self.label == 'B8':
-            from C_Element_B8_generic import Element_B8_generic
+            from .C_Element_B8_generic import Element_B8_generic
             self.reference = Element_B8_generic()
 
     def shape(self, xsi):

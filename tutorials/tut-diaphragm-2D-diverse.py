@@ -11,6 +11,7 @@
 import matplotlib.pyplot  as pyplot
 import matplotlib.pylab   as pylab
 from math import *
+import numpy as np
 import xlwt
 import sys,os
 
@@ -569,11 +570,11 @@ def Wall_cnt_stresses (zsoil_data, real_time, out_png):
 
     cnt_rsl = Contact_2D_Results (mesh,his,rcf)
     solution_index = his.give_closest_sol_index_for_time (real_time)
-    sig_nn_L = cnt_rsl.get_rsl_vec_for_sel_elements(indices_of_cnt_ele_L, solution_index, \
+    sig_nn_L = cnt_rsl.get_rsl_vec_for_sel_elements_ex(indices_of_cnt_ele_L, solution_index, \
                                                        Contact_2D_Results.stress_key, 'YY')
     sig_nn_L = sig_nn_L.reshape (sig_nn_L.size)
 
-    sig_nn_R = cnt_rsl.get_rsl_vec_for_sel_elements(indices_of_cnt_ele_R, solution_index, \
+    sig_nn_R = cnt_rsl.get_rsl_vec_for_sel_elements_ex(indices_of_cnt_ele_R, solution_index, \
                                                 Contact_2D_Results.stress_key, 'YY')
     sig_nn_R = sig_nn_R.reshape(sig_nn_R.size)
 
