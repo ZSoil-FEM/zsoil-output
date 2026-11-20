@@ -270,5 +270,4 @@ tests/**
 !tests/**/*.INP
 
 # Perforce <-> git sync: script and its local state (internal, not published)
-tools/
 .p4sync/
